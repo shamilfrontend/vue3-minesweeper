@@ -149,7 +149,7 @@ export default {
         width: 8,
         height: 8,
         totalNumberOfBombs: 10,
-        size: 38
+        size: 44
       };
 
       this.resetGame();
@@ -222,13 +222,9 @@ $border-radius: calc(var(--size) / 10);
   user-select: none;
 }
 
-html {
-  height: 100%;
-}
-
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 90vh;
   font-family: "Roboto", sans-serif;
   text-align: center;
   background-color: $tile-color;
@@ -259,7 +255,7 @@ main {
 }
 
 .status {
-  max-width: 304px;
+  max-width: 414px;
   margin-left: auto;
   margin-right: auto;
   align-items: center;
@@ -284,6 +280,7 @@ main {
 
   button {
     @include add-shadow(4px);
+    width: 44px;
     border-radius: 5px;
   }
 }
