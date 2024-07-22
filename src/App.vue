@@ -285,6 +285,7 @@ main {
     @include add-shadow(4px);
     width: 54px;
     height: 44px;
+    padding: 0;
     text-align: center;
     border-radius: 5px;
   }
