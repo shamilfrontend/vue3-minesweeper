@@ -270,6 +270,18 @@ main {
   justify-content: space-between;
   padding: 15px 0;
 
+  div {
+    min-width: 125px;
+
+    &:first-child {
+      text-align: left;
+    }
+
+    &:last-child {
+      text-align: right;
+    }
+  }
+
   button {
     @include add-shadow(4px);
     border-radius: 5px;
