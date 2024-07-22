@@ -222,9 +222,12 @@ $border-radius: calc(var(--size) / 10);
   user-select: none;
 }
 
+html {
+  background-color: $tile-color;
+}
+
 body {
   margin: 0;
-  min-height: 90vh;
   font-family: "Roboto", sans-serif;
   text-align: center;
   background-color: $tile-color;
@@ -267,7 +270,7 @@ main {
   padding: 15px 0;
 
   div {
-    min-width: 125px;
+    min-width: 120px;
 
     &:first-child {
       text-align: left;
@@ -280,7 +283,9 @@ main {
 
   button {
     @include add-shadow(4px);
-    width: 44px;
+    width: 54px;
+    height: 44px;
+    text-align: center;
     border-radius: 5px;
   }
 }
