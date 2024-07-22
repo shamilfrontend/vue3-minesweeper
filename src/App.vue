@@ -1,53 +1,30 @@
 <template>
-  <div class="v-container">
-    <header>
-      <button
-        type="button"
-        @click="setBeginnerDifficulty"
-      >
-        Beginner
-      </button>
-      <button
-        type="button"
-        @click="setIntermediateDifficulty"
-      >
-        Intermediate
-      </button>
-      <button
-        type="button"
-        @click="setExpertDifficulty"
-      >
-        Expert
-      </button>
-    </header>
+  <main :style="cssVars">
+    <div class="status">
+      <div>{{ bombsRemaining | addLeadingZeros }}</div>
+      <button @click="resetGame">{{ gameStatus }}</button>
+      <div>{{ secondsPassed | addLeadingZeros }}</div>
+    </div>
 
-    <div class="h-container">
-      <div class="v-container">
-        <main :style="cssVars">
-          <div class="status">
-            <div>{{ bombsRemaining | addLeadingZeros }}</div>
-            <button @click="resetGame">{{ gameStatus }}</button>
-            <div>{{ secondsPassed | addLeadingZeros }}</div>
-          </div>
-
-          <div class="board">
-            <div class="tile" v-for="(tile, i) in tiles" :key="i" :class="{
-              revealed: tile.revealed,
-              'wrong-pick': gameFailed &amp;&amp; ((tile.bomb &amp;&amp; tile.revealed) || (!tile.bomb &amp;&amp; tile.flagged))
-            }" :data-surrounding-bombs="tile.surroundingBombs" @click="reveal(i)" @contextmenu.prevent="flag(i)">
-              <template v-if="tile.flagged">🔴</template>
-              <template v-else-if="tile.revealed &amp;&amp; tile.bomb">💣</template>
-              <template v-else-if="tile.revealed &amp;&amp; tile.surroundingBombs">{{ tile.surroundingBombs }}</template>
-            </div>
-          </div>
-        </main>
-
-        <footer>
-          <a href="https://twitter.com/HunorBorbely" target="_top">@HunorBorbely</a>
-        </footer>
+    <div class="board">
+      <div
+        v-for="(tile, i) in tiles"
+        :key="i"
+        class="tile"
+        :class="{
+                revealed: tile.revealed,
+                'wrong-pick': gameFailed &amp;&amp; ((tile.bomb &amp;&amp; tile.revealed) || (!tile.bomb &amp;&amp; tile.flagged))
+              }"
+        :data-surrounding-bombs="tile.surroundingBombs"
+        @click="reveal(i)"
+        @contextmenu.prevent="flag(i)"
+      >
+        <template v-if="tile.flagged">🔴</template>
+        <template v-else-if="tile.revealed &amp;&amp; tile.bomb">💣</template>
+        <template v-else-if="tile.revealed &amp;&amp; tile.surroundingBombs">{{ tile.surroundingBombs }}</template>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -172,29 +149,7 @@ export default {
         width: 8,
         height: 8,
         totalNumberOfBombs: 10,
-        size: 50
-      };
-
-      this.resetGame();
-    },
-
-    setIntermediateDifficulty() {
-      this.config = {
-        width: 16,
-        height: 16,
-        totalNumberOfBombs: 40,
-        size: 35
-      };
-
-      this.resetGame();
-    },
-
-    setExpertDifficulty() {
-      this.config = {
-        width: 30,
-        height: 16,
-        totalNumberOfBombs: 99,
-        size: 25
+        size: 38
       };
 
       this.resetGame();
@@ -251,37 +206,32 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./assets/styles/base";
 @import url("https://fonts.googleapis.com/css2?family=Roboto&family=Ubuntu:wght@700&display=swap");
 
-$background-color: #006989;
 $tile-color: #d4d4d4;
 $border-radius: calc(var(--size) / 10);
+
+@mixin add-shadow($offset) {
+  $opposite: calc(#{$offset} * -1);
+  box-shadow: inset $offset $offset 0px 0px rgba(255, 255, 255, 0.45),
+  inset $opposite $opposite 0px 0px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
 
 html {
   height: 100%;
 }
 
 body {
-  background-color: $background-color;
-  font-family: "Roboto", sans-serif;
-  height: 100%;
   margin: 0;
+  min-height: 100vh;
+  font-family: "Roboto", sans-serif;
   text-align: center;
-}
-
-.h-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  height: 100%;
-}
-
-.v-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
+  background-color: $tile-color;
 }
 
 button {
@@ -300,37 +250,25 @@ a:visited {
   color: inherit;
 }
 
-header {
-  background-color: #0b2027;
-
-  button {
-    color: $tile-color;
-    padding: 20px 30px;
-  }
-}
-
-@mixin add-shadow($offset) {
-  $opposite: calc(#{$offset} * -1);
-  box-shadow: inset $offset $offset 0px 0px rgba(255, 255, 255, 0.45),
-  inset $opposite $opposite 0px 0px rgba(0, 0, 0, 0.25);
-}
-
 main {
-  background-color: $tile-color;
+  min-height: 100vh;
+  padding: 5px 8px;
   border-radius: $border-radius;
   font-family: "Ubuntu Mono", monospace;
   font-weight: 700;
-  padding: 0 20px 20px 20px;
 }
 
 .status {
+  max-width: 304px;
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
   color: #0b2027;
   display: flex;
   flex-direction: row;
   font-size: 2em;
   justify-content: space-between;
-  margin: 15px 0;
+  padding: 15px 0;
 
   button {
     @include add-shadow(4px);
@@ -342,7 +280,8 @@ main {
   display: grid;
   grid-template-columns: repeat(var(--width), auto);
   grid-template-rows: repeat(var(--height), auto);
-  user-select: none;
+  align-items: center;
+  justify-content: center;
 }
 
 .tile {
@@ -390,11 +329,5 @@ main {
   &[data-surrounding-bombs="8"] {
     color: gray;
   }
-}
-
-footer {
-  font-size: 0.8em;
-  color: $tile-color;
-  margin: 20px;
 }
 </style>
